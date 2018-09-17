@@ -1,0 +1,280 @@
+<div [@routerTransition]>
+
+    <div class="row" *ngIf="showAllListings">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div>All Sheets</div>
+                    <div class="ml-lg-5">
+                        <div class="btn-group pull-right" dropdown>
+                            <button dropdownToggle type="button" class="btn btn-dark dropdown-toggle">
+                                <span class="fa fa-plus"></span> <span class="caret"></span>
+                            </button>
+                            <ul *dropdownMenu class="dropdown-menu dropdown-menu-right ml-auto mt-2 mt-md-0" role="menu">
+                                <li role="menuitem"><a class="dropdown-item" (click)="continueTileDesigner(null)">Create
+                                    new sheet </a></li>
+                                <li class="divider dropdown-divider"></li>
+                                <li role="menuitem" *ngFor="let table of WorkspaceTables">
+                                    <a href="javascript:void(0)" class="dropdown-item"
+                                       (click)="continueSheetDesigner(table)">{{ table.TableName }}</a>
+                                </li>
+                                <!--<li role="menuitem"><a class="dropdown-item" >tbl name</a></li>-->
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-block">
+                    <table class="table">
+                        <thead class="thead-inverse">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let sheet of allSheets; let count=index">
+                            <th scope="row">{{ count + 1 }}</th>
+                            <td>{{ sheet.table_name }}</td>
+                            <td>{{ sheet.created | customDateFormat: sheet.created:'MM-DD-YYYY':null }}</td>
+                            <td>
+                                <button class="btn btn-sm"><i class=" fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" *ngIf="showAddSheets">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card card-default">
+                <div class="card-block">
+                    <div #controls class="card">
+                        <div class="card-block">
+                            <button class="btn btn-secondary pull-right" (click)="open(content,'lg')">Conditional Formatting</button>
+                            <button class="btn btn-secondary pull-right" [ngbPopover]="savePopContent" placement="left"><i class="fa fa-save fa-lg"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-block" #dvHotTable *ngIf="isSheetReady">
+                            <hotTable [data]="data"
+                                      [colHeaders]="colHeaders"
+                                      [columns]="columns"
+                                      [options]="options">
+                            </hotTable>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+                </div>
+            </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card mb-3">
+                    <div class="card-header">Conditional formatting</div>
+                    <!-- Large modal -->
+                    <div class="card-block">
+
+                        <ng-template #content let-e="close" let-f="dismiss">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Conditional formatting</h4>
+                                <button type="button" class="close" aria-label="Close" (click)="e('Cross click')">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div *ngIf="rules.length < 5">
+                                    <div class="form-group">
+                                        <select [(ngModel)]="ruleSelectedColumn" [ngModelOptions]="{standalone: true}" class="form-control" style="width:80%;float:left" required>
+                                            <option [ngValue]="undefined" selected >Please Select</option>
+                                            <option *ngFor="let column of colHeaders" [ngValue]="column">{{column}}</option>
+                                        </select>
+                                        <button class="btn btn-secondary" (click)="addRule(ruleSelectedColumn)"><i class="fa fa-plus"></i>&nbsp;Rule</button>
+
+                                    </div>
+                                </div>
+                                <div class="mt-2" [hidden]="!rules">
+                                    <table class="table table-hover">
+                                        <tr *ngFor="let i=index;let rule of rules">
+                                            <td>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" id="basic-addon2" style="display:inline-block;text-overflow:ellipsis;overflow: hidden;max-width:100px;">{{rule.condition.column}}</span>
+                                                    <select class="form-control" [(ngModel)]="rule.condition.where" [ngModelOptions]="{standalone: true}" required>
+                                                        <option [ngValue]="undefined" selected >Please Select</option>
+                                                        <option *ngFor="let ruleopt of rule_options" [ngValue]="ruleopt.label">{{ruleopt.label}}</option>
+                                                    </select>
+                                                    <!--<input name="txtRule[]" ([ngModal])="rule.condition.query" class="form-control" aria-describedby="basic-addon2" aria-label="Filter Query" placeholder="Condition Query"/>-->
+                                                </div>
+                                            </td>
+                                            <td *ngIf="rule.condition.where=='is Equal to' || rule.condition.where=='is Not Equal to' || rule.condition.where=='contains' || rule.condition.where=='is Greater than' || rule.condition.where=='is Less than'">
+                                                <div class="form-group row">
+                                                    <div class="col-xs-6 col-md-6 col-lg-6">
+                                                        <input [(ngModel)]="rule.condition.value1" [ngModelOptions]="{standalone: true}" required class="form-control" placeholder="Value" />
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td *ngIf="rule.condition.where=='is Between'">
+                                                <div class="form-group row">
+                                                    <div class="col-xs-6 col-md-6 col-lg-6">
+                                                        <input [(ngModel)]="rule.condition.value1" [ngModelOptions]="{standalone: true}" required class="form-control" placeholder="First value" />
+                                                    </div>
+                                                    <div class="col-xs-6 col-md-6 col-lg-6">
+                                                        <input [(ngModel)]="rule.condition.value2" [ngModelOptions]="{standalone: true}" required class="form-control" placeholder="Second value"/>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input readonly class="form-control"
+                                                       style="max-width: 40px;"
+                                                       [colorPicker]="color"
+                                                       [style.background]="rule.format.color"
+                                                       [value]=""
+                                                       [cpPositionOffset]="'50%'"
+                                                       [cpPositionRelativeToArrow]="true"
+                                                       (colorPickerChange)="changeColorPickerValue($event,rule)"/>
+                                            </td>
+                                            <td><button class="btn btn-xs" (click)="deleteRule(rule)"><i class="fa fa-trash"></i></button></td>
+                                        </tr>
+
+                                    </table>
+
+                                    <!--<table class="table table-hover">-->
+
+                                        <!--<tr *ngFor="let i=index;let rule of rules">-->
+                                            <!--<td>-->
+                                                <!--<div class="input-group">-->
+                                                    <!--<span class="input-group-addon" id="basic-addon2">Rule#{{i+1}}</span>-->
+                                                    <!--<input name="txtRule[]" ([ngModal])="rule.condition.query" class="form-control" aria-describedby="basic-addon2" aria-label="Filter Query" placeholder="Condition Query"/>-->
+                                                <!--</div>-->
+                                            <!--</td>-->
+                                            <!--<td>-->
+                                                <!--<input readonly class="form-control"-->
+                                                       <!--style="max-width: 40px;"-->
+                                                       <!--[colorPicker]="color"-->
+                                                       <!--[style.background]="rule.format.color"-->
+                                                       <!--[value]=""-->
+                                                       <!--[cpPositionOffset]="'50%'"-->
+                                                       <!--[cpPositionRelativeToArrow]="true"-->
+                                                       <!--(colorPickerChange)="changeColorPickerValue($event,rule)"/>-->
+                                            <!--</td>-->
+                                            <!--<td><button class="btn btn-xs" (click)="deleteRule(rule)"><i class="fa fa-trash"></i></button></td>-->
+                                        <!--</tr>-->
+
+                                    <!--</table>-->
+                                    <small>*only 5 rules allowed</small>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" (click)="applyRules()">Apply</button>
+                                <button type="button" class="btn btn-secondary" (click)="e('Close click')">Close</button>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-3">
+                    <div class="card-header">Conditions</div>
+                    <!-- Large modal -->
+                    <div class="card-block">
+
+                        <ng-template #ruleCondition>
+                            <div class="modal-header">
+                                <h4 class="modal-title">Conditional Formatting</h4>
+                                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+                                <table class="table table-responsive">
+                                    <thead>
+                                    <tr>
+                                        <th>Column</th>
+                                        <th>Condition</th>
+                                        <th>Condition Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><select class="form-control">
+                                            <option value="0" selected="selected"></option>
+                                            <option *ngFor="let column of colHeaders" [value]="column">{{column}}</option>
+                                        </select></td>
+                                        <td>
+                                            <select class="form-control">
+                                                <option value="0" selected="selected"></option>
+                                                <option *ngFor="let option of rule_options" [value]="option">{{option}}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="txtConditionValue" class="form-control"/>
+                                            <input type="text" name="txtConditionValue2" class="form-control" disabled/>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<ng-template #ruleFormat>Rule format here</ng-template>
+
+<ng-template #savePopContent>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                    <input class="form-control" style="width: 120px;" type="text" name="txtSheetTitle" [(ngModel)]="sheetTitle" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInputName2" placeholder="Enter Name" required><button class="btn btn-secondary" (click)="saveSheetForm(sheetTitle)"><i class="fa fa-save fa-lg"></i>&nbsp; Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</ng-template>
+
+
+
+
+
+

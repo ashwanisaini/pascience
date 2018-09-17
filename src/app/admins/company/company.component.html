@@ -1,0 +1,72 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'Company/Groups'" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card mb-3">
+                <!--<div class="card-header">-->
+                    <!--Company/Groups-->
+                <!--</div>-->
+                <div class="card-block table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Company/Group</th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>User Name</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let user of allUsers, let i = index">
+                            <th scope="row">{{ i+1 }}</th>
+                            <td>{{user.company_groupname}}<b *ngIf="!user.company_groupname">NA</b></td>
+                            <td>{{user.email}}<b *ngIf="!user.email">NA</b></td>
+                            <td>{{user.first_name}}<b *ngIf="!user.first_name">NA</b> {{user.last_name}}<b *ngIf="!user.last_name">NA</b></td>
+                            <td>{{user.username}}<b *ngIf="!user.username">NA</b></td>
+                            <td>
+                                <a [routerLink]="['/my_workspaces']" [routerLinkActive]="['router-link-active']" class="btn btn-default btn-sm" title="Workspaces">
+                                    <i class="fa fa-tachometer"></i>
+                                </a>
+                                <!--<button title="Dashboard" class="btn btn-dfault btn-sm" (click)="getCompanyDashBoard(user)"><i class="fa fa-tachometer" aria-hidden="true"></i></button>-->
+                                <button title="Edit" class="btn btn-default btn-sm" (click)="editUser(user)"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i></button>
+                                <button title="Delete" class="btn btn-default btn-sm" (click)="deleteUser(user)"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i></button>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+
+
+
+
+                <!--<div>-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-sm-3" *ngFor="let user of allUsers">-->
+                            <!--<div class="card card-inverse text-center mb-3" style="background-color: #333; border-color: #333;">-->
+                                <!--<div class="card-block">-->
+                                    <!--<p class="card-title">{{user.company_groupname}}<b *ngIf="!user.company_groupname">NA</b></p>-->
+                                    <!--<p class="card-text">{{user.email}}<b *ngIf="!user.email">NA</b></p>-->
+                                    <!--<p class="card-text">{{user.first_name}}<b *ngIf="!user.first_name">NA</b> {{user.last_name}}<b *ngIf="!user.last_name">NA</b></p>-->
+                                    <!--<p class="card-text">{{user.username}}<b *ngIf="!user.username">NA</b></p>-->
+                                    <!--<button title="Dashboard" class="btn btn-dfault btn-sm" (click)="getCompanyDashBoard(user)"><i class="fa fa-tachometer" aria-hidden="true"></i></button>-->
+                                    <!--<button title="Edit" class="btn btn-default btn-sm" (click)="editUser(user)"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i></button>-->
+                                    <!--<button title="Delete" class="btn btn-default btn-sm" (click)="deleteUser(user)"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i></button>-->
+
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+       </div>
+
+
+    </div>
+</div>

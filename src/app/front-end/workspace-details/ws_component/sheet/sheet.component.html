@@ -1,0 +1,12 @@
+<div class="card">
+    <div class="card-header-grey drag-handler">{{sheet_properties.table_name | uppercase}}</div>
+    <div class="card-body">
+        <div *ngIf="isSheetReady">
+            <hotTable id="{{hot_table_id}}" [data]="data"
+                      [colHeaders]="colHeaders"
+                      [columns]="columns"
+                      [options]="options">
+            </hotTable>
+        </div>
+    </div>
+</div>

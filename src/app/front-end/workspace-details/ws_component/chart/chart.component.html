@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="card-header-grey drag-handler">
+        <div class="pull-left"> <h6>{{chart_properties.name|uppercase}}</h6></div>
+        <div class="pull-right"><button aria-label="Close" type="button" (click)="deleteComponent(chart_properties)">
+            <span aria-hidden="true">×</span>
+        </button></div>
+
+        </div>
+    <div class="card-body">
+        <div *ngIf="isChartReady">
+            <nvd3 #nvd3 [options]="options" [data]="data" style="width:100% !important;height:100% !important;" api="component_data.chart.api"></nvd3>
+        </div>
+    </div>
+</div>

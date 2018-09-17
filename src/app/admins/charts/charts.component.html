@@ -1,0 +1,217 @@
+<div [@routerTransition]>
+    <div class="row" *ngIf="showAllListings">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card mb-3">
+                <div class="card-header-grey">
+                    <div>All Charts</div>
+                    <div class="ml-lg-5">
+                        <div class="btn-group pull-right" dropdown>
+                            <button class="mt-1 ml-1 mb-1" title="add new component(s) to board" placement="left"
+                                    [ngbPopover]="popoverAddNewChart" popoverTitle="" container="body"><i
+                                class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-block">
+                    <table class="table">
+                        <thead class="thead-inverse">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let chart of all_charts; let count=index" [hidden]="!all_charts.length > 0">
+                            <th scope="row">{{ count + 1 }}</th>
+                            <td>{{ chart.chart_name }}</td>
+                            <td>{{ chart.created | customDateFormat: chart.created:'MM-DD-YYYY':null }}</td>
+                            <td>
+                                <button class="btn btn-sm"><i class=" fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" *ngIf="showAddWindow">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card mb-3">
+                <div class="card-header-grey">
+                    <div class="col col-xl-11 col-lg-11 col-md-11 pull-left">Chart Designer</div>
+                    <div class="col col-xl-1 col-lg-1 col-md-1 pull-right">
+                        <button type="button" class="btn btn-sm btn-dark" (click)="goBack()" title="Back to listings">
+                            <span class="fa fa-reply"></span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="card-block">
+                    <div class="col col-xl-3 col-lg-3 col-md-3 pull-right">
+                        <div class="card mb-3">
+                            <div class="card-header-grey">Available fields</div>
+                            <div class="card-body">
+                                <div id="TODO" class="kanban-centered" >
+                                    <article class="kanban-entry grab" id="item{{i}}" [hidden]="!table_columns.length > 0" *ngFor="let i=index;let column of table_columns">
+                                        <div class="kanban-entry-inner">
+                                            <div class="kanban-label" *ngIf="column.dimension_or_fact == 'F'" dnd-draggable [dragEnabled]="true" [dropZones]="['zone1']" [dragData]="column"><span class="kanban-icon bg-primary">F</span>&nbsp;{{column.field_name}}</div>
+                                            <div class="kanban-label" *ngIf="column.dimension_or_fact == 'D'" dnd-draggable [dragEnabled]="true" [dropZones]="['zone2']" [dragData]="column"><span class="kanban-icon bg-primary">D</span>&nbsp;{{column.field_name}}</div>
+                                            <div class="kanban-label" *ngIf="column.dimension_or_fact == null" dnd-draggable [dragEnabled]="true" [dropZones]="['zone1','zone2']" [dragData]="column"><span class="kanban-icon bg-primary">?</span>&nbsp;{{column.field_name}}</div>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col col-xl-9 col-lg-9 col-md-9 pull-left">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div #datafilters>
+                                    <div class="card mb-3" dnd-droppable (onDropSuccess)="transferDataSuccessRow($event)" [dropZones]="['zone1']">
+                                        <div class="card-header-grey">Rows</div>
+                                        <div class="card-block">
+                                            <span class="badge badge-pill badge-default ml-2" [hidden]="!chart_rows > 0" *ngFor="let row of chart_rows">{{row}} <a href="javascript:void(0)" (click)="removeItem(row,'row')">x</a></span>
+                                            <!--<span class="text text-center text-muted" [hidden]="chart_rows >0" >Drag n drop field(s) here</span>-->
+                                            <!--<div [hidden]="!chart_rows > 0" *ngFor="let row of chart_rows">{{row}}</div>-->
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-3" dnd-droppable (onDropSuccess)="transferDataSuccessCols($event)" [dropZones]="['zone2']">
+                                        <div class="card-header-grey">Columns</div>
+                                        <div class="card-block">
+                                            <span class="badge badge-pill badge-default ml-2" [hidden]="!chart_columns > 0" *ngFor="let column of chart_columns">{{column}} <a href="javascript:void(0)" (click)="removeItem(column,'column')">x</a></span>
+                                            <!--<span class="text text-center text-muted" [hidden]="chart_columns >0" >Drag n drop field(s) here</span>-->
+                                            <!--<div [hidden]="!chart_rows > 0" *ngFor="let column of chart_columns">{{column}}</div>-->
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-3">
+                                        <div class="card-header-grey">Aggregation Type</div>
+                                        <div class="card-block">
+                                            <div class="col-sm-12">
+                                                <select (change)="changeAggregation()" class="form-control" name="chartAgg" [(ngModel)]="chart_agg_type">
+                                                    <option [ngValue]="SUM" selected>SUM</option>
+                                                    <option [ngValue]="MAX">MAX</option>
+                                                    <option [ngValue]="MIN">MIN</option>
+                                                    <option [ngValue]="AVG">AVERAGE</option>
+                                                    <option [ngValue]="FACET">FACET</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                        <div class="card mb-3">
+                            <div class="card-header-grey">Chart Preview</div>
+                            <div class="card-body" style="min-height: 500px;">
+                                <div class="card">
+                                    <div class="card-block">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-xs btn-primary" title="select chart type" placement="right"
+                                                    [ngbPopover]="popoverChartType" popoverTitle="" container="body"><i
+                                                    class="fa fa-area-chart"></i></button>
+
+                                            <button type="button" class="btn btn-xs btn-primary" title="chart settings"><i class="fa fa-cog"></i></button>
+                                            <button type="button" class="btn btn-xs btn-primary" title="data preview"><i class="fa fa-table"></i></button>
+                                            <button type="button" class="btn btn-xs btn-primary" title="save chart" placement="right"
+                                                    [ngbPopover]="popoverSaveChart" popoverTitle="" container="body"><i class="fa fa-save"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card" #chartDesigner>
+                                    <div class="card-block">
+                                         <admin-chart-designer [property]="chart_properties"></admin-chart-designer>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<ng-template #popoverAddNewChart>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <!--<pre>{{all_component_lists|json}}</pre>-->
+                    <div ngbDropdown class="d-inline-block" autoClose="true">
+                        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select table</button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button class="dropdown-item" *ngFor="let table of all_tables" (click)="addNewChart(table)">{{table.TableName}}</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</ng-template>
+
+<ng-template #popoverChartType>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-body chart-type">
+                    <div *ngFor="let type of chart_types" class="item">
+                        <button class="btn btn-sm" title="{{type.chart_type}}" (click)="changeChartType(type)">
+                            <img src="{{type.icon}}" alt="{{type.chart_type}}" />
+                        </button>
+                    </div>
+                    <!--<div *ngFor="let type of chart_types" [innerHtml]="type.chart_type"></div>-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</ng-template>
+
+<ng-template #popoverSaveChart>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1">Name</span>
+                                <input type="text" name="txtChartName" [(ngModel)]="chartName" class="form-control" placeholder="Chart Name"/>
+                                <button class="btn btn-sm btn-primary" type="submit" (click)="saveChart(chartName)" name="btnSaveChart">Save</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</ng-template>

@@ -1,0 +1,28 @@
+<div [@routerTransition]>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    All Workspaces
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="col-sm-3" *ngFor="let workspace of allWorkspaces">
+                            <div class="card card-inverse text-center mb-3" style="background-color: #333; border-color: #333;">
+                                <div class="card-block">
+                                    <p class="card-title">{{workspace.ws_name}}<b *ngIf="!workspace.ws_name">NA</b></p>
+                                    <button title="Dashboard" class="btn btn-dfault btn-sm" (click)="gotoBoards(workspace)"><i class="fa fa-tachometer" aria-hidden="true"></i></button>
+                                    <!--<button title="Edit" class="btn btn-default btn-sm" (click)="edit(workspace)"><i class="fa fa-pencil fa-fw" aria-hidden="true"></i></button>-->
+                                    <button title="Delete" class="btn btn-default btn-sm" (click)="delete(workspace)"><i class="fa fa-trash-o fa-fw" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+       </div>
+
+
+    </div>
+</div>

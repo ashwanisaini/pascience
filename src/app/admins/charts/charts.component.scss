@@ -1,0 +1,398 @@
+.kanban-centered {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.kanban-centered:before, .kanban-centered:after {
+    content: " ";
+    display: table;
+}
+
+.kanban-centered:after {
+    clear: both;
+}
+
+.kanban-centered:before, .kanban-centered:after {
+    content: " ";
+    display: table;
+}
+
+.kanban-centered:after {
+    clear: both;
+}
+
+.kanban-centered:before {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 2px;
+    /*background: #f5f5f6;*/
+    top: 20px;
+    bottom: 20px;
+    /*margin-left: 18px;*/
+}
+
+.kanban-centered .kanban-entry {
+    position: relative;
+    /*width: 50%;
+    float: right;*/
+    margin: 10px 8px;
+    clear: both;
+    border-radius: 4px;
+    -webkit-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
+    box-shadow: 1px 1px 2px 0px rgba(50, 50, 50, 0.5);
+}
+
+.kanban-centered .kanban-entry:before, .kanban-centered .kanban-entry:after {
+    content: " ";
+    display: table;
+}
+
+.kanban-centered .kanban-entry:after {
+    clear: both;
+}
+
+.kanban-centered .kanban-entry:before, .kanban-centered .kanban-entry:after {
+    content: " ";
+    display: table;
+}
+
+.kanban-centered .kanban-entry:after {
+    clear: both;
+}
+
+.kanban-centered .kanban-entry.begin {
+    margin-bottom: 0;
+}
+
+.kanban-centered .kanban-entry.left-aligned {
+    float: left;
+}
+
+.kanban-centered .kanban-entry.left-aligned .kanban-entry-inner {
+    margin-left: 0;
+    margin-right: -18px;
+}
+
+.kanban-centered .kanban-entry.left-aligned .kanban-entry-inner .kanban-time {
+    left: auto;
+    right: -100px;
+    text-align: left;
+}
+
+.kanban-centered .kanban-entry.left-aligned .kanban-entry-inner .kanban-icon {
+    float: right;
+}
+
+.kanban-centered .kanban-entry.left-aligned .kanban-entry-inner .kanban-label {
+    margin-left: 0;
+    margin-right: 70px;
+}
+
+.kanban-centered .kanban-entry.left-aligned .kanban-entry-inner .kanban-label:after {
+    left: auto;
+    right: 0;
+    margin-left: 0;
+    margin-right: -9px;
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner {
+    position: relative;
+    /*margin-left: -24px;*/
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner:before, .kanban-centered .kanban-entry .kanban-entry-inner:after {
+    content: " ";
+    display: table;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner:after {
+    clear: both;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner:before, .kanban-centered .kanban-entry .kanban-entry-inner:after {
+    content: " ";
+    display: table;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner:after {
+    clear: both;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-time {
+    position: absolute;
+    left: -100px;
+    text-align: right;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-time > span {
+    display: block;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-time > span:first-child {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-time > span:last-child {
+    font-size: 12px;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-icon {
+    background: #fff;
+    color: #737881;
+    display: block;
+    width: 25px;
+    height: 25px;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    text-align: center;
+    -moz-box-shadow: 0 0 0 4px #f5f5f6;
+    -webkit-box-shadow: 0 0 0 4px #f5f5f6;
+    box-shadow: 0 0 0 4px #f5f5f6;
+    float: left;
+    margin-top: 6px;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-icon.bg-primary {
+    background-color: #303641;
+    color: #fff;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-icon.bg-secondary {
+    background-color: #ee4749;
+    color: #fff;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-icon.bg-success {
+    background-color: #00a651;
+    color: #fff;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-icon.bg-info {
+    background-color: #21a9e1;
+    color: #fff;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-icon.bg-warning {
+    background-color: #fad839;
+    color: #fff;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-icon.bg-danger {
+    background-color: #cc2424;
+    color: #fff;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-label {
+    position: relative;
+    background: #f5f5f6;
+    padding: 0.75em;
+    /*margin-left: 50px;*/
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    //float: left;
+    word-break:break-all;
+}
+
+/*.kanban-centered .kanban-entry .kanban-entry-inner .kanban-label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 9px 9px 9px 0;
+    border-color: transparent #f5f5f6 transparent transparent;
+    left: 0;
+    top: 10px;
+    margin-left: -9px;
+}*/
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-label h2, .kanban-centered .kanban-entry .kanban-entry-inner .kanban-label p {
+    color: #737881;
+    font-family: "Noto Sans",sans-serif;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.428571429;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-label p + p {
+    margin-top: 15px;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-label h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-label h2 a {
+    color: #303641;
+}
+
+.kanban-centered .kanban-entry .kanban-entry-inner .kanban-label h2 span {
+    -webkit-opacity: .6;
+    -moz-opacity: .6;
+    opacity: .6;
+    -ms-filter: alpha(opacity=60);
+    filter: alpha(opacity=60);
+}
+
+#TODO div{
+    cursor: move;
+}
+
+/* dragula-specific example page styles */
+.wrapper {
+    display: table;
+}
+.container {
+    display: table-cell;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 50%;
+}
+.container:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+/*
+ * note that styling gu-mirror directly is a bad practice because it's too generic.
+ * you're better off giving the draggable elements a unique class and styling that directly!
+ */
+.container > div,
+.gu-mirror {
+    margin: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: opacity 0.4s ease-in-out;
+}
+.container > div {
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+.gu-mirror {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+.container .ex-moved {
+    background-color: #e74c3c;
+}
+.container.ex-over {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+#left-lovehandles > div,
+#right-lovehandles > div {
+    cursor: initial;
+}
+.handle {
+    padding: 0 5px;
+    margin-right: 5px;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: move;
+}
+.image-thing {
+    margin: 20px 0;
+    display: block;
+    text-align: center;
+}
+.slack-join {
+    position: absolute;
+    font-weight: normal;
+    font-size: 14px;
+    right: 10px;
+    top: 50%;
+    margin-top: -8px;
+    line-height: 16px;
+}
+
+///**
+.bootstrap-tagsinput {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    display: inline-block;
+    padding: 4px 6px;
+    color: #555;
+    vertical-align: middle;
+    border-radius: 4px;
+    max-width: 100%;
+    line-height: 22px;
+    cursor: text;
+}
+.bootstrap-tagsinput input {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0 6px;
+    margin: 0;
+    width: auto;
+    max-width: inherit;
+}
+.bootstrap-tagsinput.form-control input::-moz-placeholder {
+    color: #777;
+    opacity: 1;
+}
+.bootstrap-tagsinput.form-control input:-ms-input-placeholder {
+    color: #777;
+}
+.bootstrap-tagsinput.form-control input::-webkit-input-placeholder {
+    color: #777;
+}
+.bootstrap-tagsinput input:focus {
+    border: none;
+    box-shadow: none;
+}
+.bootstrap-tagsinput .tag {
+    margin-right: 2px;
+    color: white;
+}
+.bootstrap-tagsinput .tag [data-role="remove"] {
+    margin-left: 8px;
+    cursor: pointer;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+    content: "x";
+    padding: 0px 2px;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:hover:active {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.chart-type .item img {
+    max-width: 100%;
+    height: 45px;
+    width:65px;
+}
+
+.chart-type .item {
+    width: 80px;
+    min-height: 60px;
+    max-height: 80px;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+}

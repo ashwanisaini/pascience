@@ -1,0 +1,323 @@
+<div [@routerTransition]>
+    <div class="row" *ngIf="showAllListings">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div>All Kanbans</div>
+                    <div class="ml-lg-5">
+                        <div class="btn-group pull-right" dropdown>
+                            <button type="button" class="btn btn-dark" (click)="addNewKanban()">
+                                <span class="fa fa-plus"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-block">
+                    <table class="table">
+                        <thead class="thead-inverse">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let kanban of all_kanbans; let count=index">
+                            <th scope="row">{{ count + 1 }}</th>
+                            <td>{{ kanban.component_name }}</td>
+                            <td>{{ kanban.created | customDateFormat: kanban.created:'MM-DD-YYYY':null }}</td>
+                            <td>
+                                <button class="btn btn-sm"><i class=" fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Show Add Window -->
+
+    <div class="row" *ngIf="showAddWindow">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div>Add a Kanban</div>
+                    <div class="ml-lg-5">
+                        <div class="btn-group pull-right" dropdown>
+                            <button type="button" class="btn btn-dark" (click)="resetWindow()" title="Back to listings">
+                                <span class="fa fa-reply"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-block">
+                    <form-wizard>
+                        <wizard-step [title]="'Step1'" (onNext)="onStep1Next($event)">
+                            <h3>Details</h3>
+
+                            <form #kanbanForm="ngForm">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="componentName">Name:</label>
+                                    <div class="col-sm-12">
+                                        <input name="componentName" id="componentName" class="form-control" type="text" [(ngModel)]="kanban.name" [ngModelOptions]="{standalone: true}" placeholder="Component Name" ng-required="true" maxlength="50" minlength="3" [min]="10" ng-focus="true" required="required" aria-invalid="false">
+                                        <!--<input type="number" [(ngModel)]="model.field" name="field" #field="ngModel" [min]="10"/>-->
+                                        <!--<p *ngIf="componentName.errors?.min">error message</p>-->
+                                    </div>
+                                </div>
+
+                                <div class="dropdown form-group" *ngIf="kanban.name">
+                                    <label class="control-label col-sm-2" for="kanabantile">Select Tile:</label>
+                                    <div class="col-sm-12">
+                                        <!--<pre>{{all_tiles | json}}</pre>-->
+                                        <!--<pre>{{kanban.kanabantile |json}}</pre>-->
+                                        <select name="kanabantile" id="kanabantile" [(ngModel)]="kanban.kanabantile" [ngModelOptions]="{standalone: true}" (change)="checkCols(kanban.kanabantile)" class="boardselect form-control" required>
+                                        <!--<select name="kanabantile" id="kanabantile" [(ngModel)]="kanban.kanabantile" (change)="checkCols(kanban.kanabantile)" class="boardselect form-control" required>-->
+                                            <option [ngValue]='undefined' selected>-- Choose Tile --</option>
+                                            <option *ngFor="let tile of all_tiles" [ngValue]="tile.ROWID">{{tile.title}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" *ngIf="kanban.kanabantile">
+                                    <label class="control-label col-sm-2" for="colsVal">Kanban Column:</label>
+                                    <div class="col-sm-12">
+                                        <select name="kanabantile" id="kanabancolumn" [(ngModel)]="kanban.kanabancolumn" [ngModelOptions]="{standalone: true}" (change)="checkUniqueCols(kanban.kanabancolumn)" class="boardselect form-control" required>
+                                            <option value='undefined' selected>-- Choose Column --</option>
+                                            <option *ngFor="let cols of tableFields" value="{{cols}}">{{cols}}</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group" *ngIf="kanban.kanabantile">
+                                    <label class="control-label col-sm-2" for="colsVal">Columns required#:</label>
+                                    <div class="col-sm-12">
+                                        <input name="selectedcols" type="number" id="colsVal" [(ngModel)]="kanban.selectedcols" [ngModelOptions]="{standalone: true}" class="form-control" minlength="1" maxlength="2"  required>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group" *ngIf="kanban.kanabantile">
+                                    <label class="control-label col-sm-2" for="refresh_fequency">Refresh Frequency:</label>
+                                    <div class="col-sm-12">
+                                        <div class="input-group">
+                                            <input name="refresh_fequency" id="refresh_fequency" type="text" min="20" max="1000" class="form-control" placeholder="Refresh Frequency" [(ngModel)]="kanban.refresh_fequency" [ngModelOptions]="{standalone: true}" value="60" only-digits required>
+                                            <span class="input-group-addon">seconds</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" *ngIf="kanban.kanabantile">
+                                    <label class="control-label col-sm-2">Show Label:</label>
+                                    <div class="col-sm-12">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" [(ngModel)]="kanban.is_label_visible" [ngModelOptions]="{standalone: true}" name="optionsRadios" value="yes" selected> Yes
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" [(ngModel)]="kanban.is_label_visible" [ngModelOptions]="{standalone: true}" name="optionsRadios" value="no"> No
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--<div class="form-group">-->
+                                    <!--<label for="exampleInputEmail1">Email address</label>-->
+                                    <!--<input type="email" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"-->
+                                           <!--[(ngModel)]="data.email" required>-->
+                                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                                <!--</div>-->
+                            </form>
+                        </wizard-step>
+                        <wizard-step [title]="'Step2'" (onNext)="onStep2Next($event)">
+                            <h3>Filter</h3>
+                            <div class="form-group" *ngIf="kanban.kanabantile">
+                                <label class="control-label col-sm-2" for="kanabanFilter">Filter:</label>
+                                <div class="col-sm-10">
+
+                                    <select id="kanabanFilter" [(ngModel)]="kanban.col_filter" [ngModelOptions]="{standalone: true}" class="form-control">
+                                        <option value='undefined' selected>-- Choose Column --</option>
+                                        <option *ngFor="let filter of all_filters" value="{{filter.ROWID}}">{{filter.filter_name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </wizard-step>
+
+                        <wizard-step [title]="'Step3'" (onNext)="onStep3Next($event)">
+                            <h3>Highlights</h3>
+                            <div ng-repeat="kanban in kanban.highlighters">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2" for="kanabanHighlights">Highlight:</label>
+                                        <div class="col-sm-12">
+                                            <select id="kanabanHighlights"  [(ngModel)]="kanban.col_highlight_rule" [ngModelOptions]="{standalone: true}" class="form-control">
+                                                <option value='undefined' selected>-- Choose Column --</option>
+                                                <option *ngFor="let filter of all_filters" value="{{filter.ROWID}}">{{filter.filter_name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2">Highlight Color:</label>
+                                        <div class="col-sm-12">
+                                            <input readonly class="form-control"
+                                                   style="max-width: 100px;"
+                                                   [colorPicker]="color"
+                                                   [style.background]="kanban.col_highlight_color"
+                                                   [value]=""
+                                                   [cpPositionOffset]="'50%'"
+                                                   [cpPositionRelativeToArrow]="true"
+                                                   [cpSaveClickOutside]= "true"
+                                                   (colorPickerChange)="changeColorPickerValue($event,rule)"/>
+
+                                            <!--<select [ngStyle]="{'background': kanban.colHighlightcolor}" class="form-control clrscl" [(ngModel)]="kanban.colHighlightcolor" [ngModelOptions]="{standalone: true}">-->
+                                                <!--<option [ngValue]="undefined" selected (click)="optionCheck(option)">Pick</option>-->
+                                                <!--<option [ngStyle]="{'background': '#87CEFA'}" value="#87CEFA"></option>-->
+                                                <!--<option [ngStyle]="{'background': '#1E90FF'}" value="#1E90FF"></option>-->
+                                                <!--<option [ngStyle]="{'background': '#00BFFF'}" value="#00BFFF"></option>-->
+                                                <!--<option [ngStyle]="{'background': '#9370DB'}" value="#9370DB"></option>-->
+                                                <!--<option [ngStyle]="{'background': '#FFA500'}" value="#FFA500"></option>-->
+                                                <!--<option [ngStyle]="{'background': '#CD5C5C'}" value="#CD5C5C"></option>-->
+                                                <!--<option [ngStyle]="{'background': '#A81AED'}" value="#A81AED"></option>-->
+                                                <!--<option [ngStyle]="{'background': '#A9F316'}" value="#A9F316"></option>-->
+                                                <!--<option [ngStyle]="{'background': '#F5EE12'}" value="#F5EE12"></option>-->
+                                            <!--</select>-->
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </wizard-step>
+
+                        <wizard-step [title]="'Step4'" (onNext)="onStep3Next($event)">
+                            <h3>Card & Column Configurations</h3>
+                            <div class="form-group" *ngIf="kanban.kanabantile">
+                                <label class="control-label col-sm-2" >Card Editable:</label>
+                                <div class="col-sm-12">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" [(ngModel)]="kanban.card_editable" [ngModelOptions]="{standalone: true}" name="optionsRadios2" value="yes" selected> Yes
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" [(ngModel)]="kanban.card_editable" [ngModelOptions]="{standalone: true}" name="optionsRadios2" value="no"> No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="kanban.kanabantile">
+                                <label class="control-label col-sm-2" >Column(s) editable:</label>
+                                <div class="col-sm-12">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" [(ngModel)]="kanban.is_user_edit" [ngModelOptions]="{standalone: true}" name="optionsRadios3" value="yes" checked> Yes
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" [(ngModel)]="kanban.is_user_edit" [ngModelOptions]="{standalone: true}" name="optionsRadios3" value="no"> No
+                                        </label>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+
+                        </wizard-step>
+
+                        <!--<wizard-step [title]="'Step3'" (onNext)="onStep3Next($event)">-->
+                            <!--<h1>Highlights</h1>-->
+                        <!--</wizard-step>-->
+
+                        <wizard-step [title]="'Step5'" (onComplete)="onComplete($event)">
+                            <div [ngSwitch]="isCompleted">
+                                <div *ngSwitchDefault>
+                                    <h3>Header Configuration</h3>
+                                    <div class="form-group" *ngIf="kanban.kanabantile">
+                                        <label class="control-label col-sm-2" >Header Required:</label>
+                                        <div class="col-sm-12">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" [(ngModel)]="kanban.selectedHeader" [ngModelOptions]="{standalone: true}" name="optionsRadios4" value="true" checked> Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" [(ngModel)]="kanban.selectedHeader" [ngModelOptions]="{standalone: true}" name="optionsRadios4" value="false"> No
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="kanban.selectedHeader">
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2" >Header Type:</label>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" [(ngModel)]="kanban.selectedHeaderType" [ngModelOptions]="{standalone: true}" name="optionsRadios5" value="Chart" (click)="onHeaderTypeChange()" checked> Chart
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" [(ngModel)]="kanban.selectedHeaderType" [ngModelOptions]="{standalone: true}" name="optionsRadios5" value="Image" (click)="onHeaderTypeChange()"> Image
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <fieldset >
+                                        <legend>Header Configuration(s)</legend>
+                                        <!--  <h5 id ="chartconfigErr" style="color:red;text-align:center"></h5> -->
+                                        <div class="alert alert-danger" id="chartconfigErr" style="display:none;"></div>
+                                        <div class="form-group chartImage" *ngIf="kanban.headers.columns">
+                                            <label class="control-label"> </label>
+                                            <div class="imagesClone clearfix" *ngFor="let i=index; let column of kanban.headers.columns">
+                                                <div class="imageBlock">
+                                                    <div class="col-sm-6 col-sm-offset-1">
+                                                        <input class="matchconfig form-control" type='text' [(ngModel)]="kanban.headers.columns[i].col" [ngModelOptions]="{standalone: true}">
+                                                    </div>
+                                                    <div *ngIf="showCharts" class="col-sm-5">
+                                                        <select class ="matchconfig form-control" (change)="matchChartConfig(kanban.headers.columns[i].charts)" [(ngModel)]="kanban.headers.columns[i].charts" [ngModelOptions]="{standalone: true}">
+                                                            <!--<select class ="matchconfig form-control" (change)="matchChartConfig(kanban.headers.columns[i].charts)" [(ngModel)]="kanban.headers.columns[i].charts" ng-options="Chart.chart_name for Chart in chartsInfo">-->
+                                                        <option *ngFor="let cinfo of chartsInfo" value="{{cinfo.chart_name}}">{{cinfo.chart_name}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-sm-5" *ngIf="!showCharts">
+                                                        <input class="form-control" type="file" ng2FileSelect [uploader]="uploader" (change)="fileUploadChange(i,column)"/>
+                                                    </div>
+
+                                                    <!--<div class="col-sm-5" *ngIf="!showCharts">-->
+                                                        <!--<input type="file" ng2FileSelect [uploader]="uploader" />-->
+                                                        <!--&lt;!&ndash;<button class="btn btn-primary btn-sm" ngf-select [(ngModel)]="kanban.headers.columns[i].file" name="file" ngf-pattern="'image/*'" ngf-accept="'image/*'" ngf-max-size="20MB" ngf-min-height="100" ngf-min-width="100" ngf-resize="{width: 600, height: 600}">Select</button>&ndash;&gt;-->
+                                                        <!--<label class="truncate">{{kanban.headers.columns[i].file.$ngfName}}</label>-->
+                                                    <!--</div>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                </div>
+                                <div *ngSwitchCase="true">
+                                    <h4>Component has been created.</h4>
+                                </div>
+                            </div>
+                        </wizard-step>
+                    </form-wizard>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

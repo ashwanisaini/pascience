@@ -1,0 +1,62 @@
+<div class="card" *ngIf="component_details">
+    <div class="card-header-grey drag-handler">
+
+        <div class="pull-left"> <h6>{{component_details.component_name|uppercase}}</h6></div>
+        <div class="pull-right"><button aria-label="Close" type="button" (click)="deleteComponent(component_details)">
+            <span aria-hidden="true">×</span>
+        </button></div>
+    </div>
+    <div class="card-body kanban-scroll" *ngIf="component_details">
+        <!--<pre>{{component_details_columns|json}}</pre>-->
+        <div *ngFor="let col_number = index;let column of component_details_columns" class="kanban-col" [attr.column-name]="column.col">
+            <div class="card" style="width: 20rem;">
+                <div class="card-header start text-center column-header">
+                    <!--<strong>{{column.col|uppercase}}</strong>-->
+                    <div>
+                        <inline-editor type="text" [(ngModel)]="column.col" (onSave)="saveEditable($event,component_details)" name="editableText1" size="30" min="3" max="50" pattern="^[a-zA-Z]{1,3}" hideButtons="true" required="true"></inline-editor>
+                    </div>
+                    <!--<h4 [innerHtml]="column.col"-->
+                        <!--[style.display]="editingColumn ?'none' : '' "-->
+                        <!--(click)="editColumn(column.col,col_number)" [id]="column+'_'+col_number"></h4>-->
+                    <!--<input-->
+                        <!--[style.display]="editingColumn ?'' : 'none' "-->
+                        <!--(blur)="updateColumnOnBlur()"-->
+                        <!--(keyup)="addColumnOnEnter($event)"-->
+                        <!--[(ngModel)]="column.title" />-->
+                </div>
+                <div *ngIf="component_details.header_type=='Image'" class="img" style="text-align: center;">
+                    <img class="card-img-top"
+                         src="http://52.8.103.166:3000/api/containers/kanbanfiles/download/{{column.file_name}}"
+                         alt="Card image cap">
+                </div>
+                <div *ngIf="component_details.header_type=='Chart'">
+                    chart not implemented yet
+                </div>
+
+                <div class="card-block">
+                    <!--<div id="TODO" class="kanban-centered" dnd-droppable (onDropSuccess)="cardMoved($event)" [dropZones]="[component_details.ROWID]">-->
+
+                    <!--<article dnd-draggable [dragEnabled]="true" [dropZones]="[component_details.ROWID]" [dragData]="card" class="kanban-entry grab" id="item{{i}}" [hidden]="!cards.length > 0" *ngFor="let i=index;let card of cards">-->
+                    <div id="TODO" class="kanban-centered">
+                        <app-kanban-card [column_name]="column.col" [component_details]="component_details"></app-kanban-card>
+                    </div>
+                    <!--<div class="card-footer">-->
+                        <!--&lt;!&ndash;<div class="addFormLink">&ndash;&gt;-->
+                            <!--&lt;!&ndash;&lt;!&ndash;<a href="javascript:void(0);" (click)="toggleAddCard(col_number +'_' + component_details.component_id)">add new card</a>&ndash;&gt;&ndash;&gt;-->
+                            <!--&lt;!&ndash;<a href="javascript:void(0);" style="display: block;">Add new card</a>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div id="addFrom{{col_number +'_' + component_details.component_id}}" class="showAddForm"&ndash;&gt;-->
+                             <!--&lt;!&ndash;style="display: none;">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<app-kanban-form [tiledetails]="tile_details" (cancel)="hideAllCards()"&ndash;&gt;-->
+                                             <!--&lt;!&ndash;(update)="checkme($event)" [colNumber]="col_number"></app-kanban-form>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card" *ngIf="!component_details">
+    <div class="card-block">Component details not found</div>
+</div>

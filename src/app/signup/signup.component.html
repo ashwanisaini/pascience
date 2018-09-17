@@ -1,0 +1,48 @@
+<div class="login-page" [@routerTransition]>
+    <div class="row">
+        <div class="col-md-4 push-md-4">
+            <img class="user-avatar" src="assets/images/logo.png" width="150px" />
+            <h1>PA Science</h1>
+            <form [formGroup]="form" class="form-horizontal">
+                <div *ngIf="alertMessage">
+                    <p class="text text-info">{{ alertMessage }}</p>
+                </div>
+
+                <div class="form-content">
+                    <div class="form-group">
+                        <input formControlName="first_name" type="text" class="form-control input-underline input-lg" placeholder="First Name">
+                    </div>
+
+                    <div class="form-group">
+                        <input formControlName="last_name" type="text" class="form-control input-underline input-lg" placeholder="Last Name">
+                    </div>
+
+                    <div class="form-group">
+                        <input formControlName="email" type="email" class="form-control input-underline input-lg" placeholder="Email">
+
+                    </div>
+
+                    <div class="form-group">
+                        <input formControlName="username" type="text" class="form-control input-underline input-lg" placeholder="Username">
+                    </div>
+
+                    <div class="form-group">
+                        <input formControlName="password" type="password" class="form-control input-underline input-lg" placeholder="Password">
+
+                    </div>
+                    <div class="form-group">
+                        <input formControlName="cpassword" type="password" class="form-control input-underline input-lg" placeholder="Repeat Password">
+                    </div>
+
+                    <div class="form-group">
+                        <input formControlName="company_group" type="text" class="form-control input-underline input-lg" placeholder="Company/Group Name">
+
+                    </div>
+                </div>
+
+                <button [disabled]="!form.valid" type="submit" class="btn rounded-btn" (click)="register(form)">Register</button>
+                <a type="submit" class="btn rounded-btn" routerLink="/login"> Sign in </a>
+            </form>
+        </div>
+    </div>
+</div>

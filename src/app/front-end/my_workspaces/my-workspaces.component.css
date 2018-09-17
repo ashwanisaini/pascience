@@ -1,0 +1,11 @@
+.card-hover{
+    text-align: center;
+    background-color: #333;
+    border-color: #333;
+    max-height: 116px;
+}
+.card-hover:hover{
+    background-color: #3a3a3a;
+}
+
+

@@ -1,0 +1,94 @@
+<div [@routerTransition]>
+
+
+    <div class="row" *ngIf="showAllListings">
+        <app-page-header [heading]="'Manage Data Filters'" [icon]="'fa-table'"></app-page-header>
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> Striped Table
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-dark" title="Add new filters" (click)="openAddWindow()" >
+                            <span class="fa fa-plus"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-block">
+                    <table class="table">
+                        <thead class="thead-inverse">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let filter of all_filters; let count=index">
+                            <th scope="row">{{ count + 1 }}</th>
+                            <td>{{ filter.filter_name }}</td>
+                            <td>{{ filter.created | customDateFormat: filter.created:'MM-DD-YYYY':null }}</td>
+                            <td>
+                                <button class="btn btn-sm"><i class=" fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" *ngIf="showAddSheets">
+        <app-page-header [heading]="'Manage Data Filters/Add New'" [icon]="'fa-table'"></app-page-header>
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card card-default">
+                <div class="card-block">
+                    <div #controls class="card">
+                        <div class="card-header">
+                            <i class="fa fa-align-justify"></i> Add New Filter
+                            <button class="btn btn-secondary pull-right" (click)="saveFilter()"><i class="fa fa-save fa-lg"></i></button>
+                        </div>
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="col-lg-12">
+
+                                    <form role="form">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-12">Name:</label>
+                                            <div class="col-sm-12">
+                                                <input name="name" id="name" class="form-control" type="text" [(ngModel)]="filter.name" [ngModelOptions]="{standalone: true}" placeholder="Enter Filter Name" ng-required="true" maxlength="50" minlength="3" [min]="10" ng-focus="true" required="required" aria-invalid="false">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-12">Data Source:</label>
+                                            <div class="col-sm-12">
+                                                <select name="datasource" id="datasource" [(ngModel)]="filter.datasource" [ngModelOptions]="{standalone: true}" class="boardselect form-control" required>
+                                                    <option value='undefined' selected>-- Choose Column --</option>
+                                                    <option *ngFor="let table of WorkspaceTables" value="{{table}}">{{table.TableName}}</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-12">Rule/Query:</label>
+                                            <div class="col-sm-12">
+                                                <input name="rule" id="rule" class="form-control" type="text" [(ngModel)]="filter.rule" [ngModelOptions]="{standalone: true}" placeholder="Write custom rule or query" ng-required="true" maxlength="500" minlength="3" [min]="10" ng-focus="true" required="required" aria-invalid="false">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

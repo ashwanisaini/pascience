@@ -1,0 +1,7 @@
+<div class="form-group">
+    <label for="input01">Text</label>
+    <!--<input type="text" class="form-control" id="input01" placeholder="Text" [value]="count" ngModel="ngModel">-->
+    <input type="text" class="form-control" [(ngModel)]="value"
+    class="form-control"
+    (blur)="onBlur()"/>
+</div>

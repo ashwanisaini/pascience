@@ -1,0 +1,476 @@
+<div [@routerTransition]>
+
+    <div class="row" *ngIf="showAllListings">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div>All Tiles</div>
+                    <!--<form [formGroup]="form" autocomplete="off">-->
+                    <!--<div class="form-group">-->
+                    <!--<label class='control-label'> Label</label>-->
+                    <!--<input type='text' class='form-control' />-->
+                    <!--</div>-->
+                    <!--<div class="form-group">-->
+                    <!--<label class='control-label'> Placeholder</label>-->
+                    <!--<input type='text' class='form-control'/>-->
+                    <!--</div>-->
+                    <div class="ml-lg-5">
+                        <div class="btn-group pull-right" dropdown>
+                            <button dropdownToggle type="button" class="btn btn-dark dropdown-toggle">
+                                <span class="fa fa-plus"></span> <span class="caret"></span>
+                            </button>
+                            <ul *dropdownMenu class="dropdown-menu dropdown-menu-right ml-auto mt-2 mt-md-0" role="menu">
+                                <li role="menuitem"><a class="dropdown-item" (click)="continueTileDesigner(null)">Create
+                                    new tile </a></li>
+                                <li class="divider dropdown-divider"></li>
+                                <li role="menuitem" *ngFor="let table of WorkspaceTables">
+                                    <a href="javascript:void(0)" class="dropdown-item"
+                                       (click)="continueTileDesigner(table)">{{ table.TableName }}</a>
+                                </li>
+                                <!--<li role="menuitem"><a class="dropdown-item" >tbl name</a></li>-->
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-block">
+                    <table class="table">
+                        <thead class="thead-inverse">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let tile of allTiles; let count=index">
+                            <th scope="row">{{ count + 1 }}</th>
+                            <td>{{ tile.title }}</td>
+                            <td>{{ tile.created | customDateFormat: tile.created:'MM-DD-YYYY':null }}</td>
+                            <td>
+                                <button class="btn btn-sm" (click)="deleteTile(tile)"><i class=" fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Table PArt -->
+
+    <div class="row" *ngIf="showAddTiles">
+        <div class="col col-xl-9 col-lg-9 col-md-9">
+            <div class="card card-default">
+                <div class="card-heading">
+                    <div class="ml-4 mt-2 pull-left">
+                        <div>
+                            <div>
+                                <inline-editor type="text" [(ngModel)]="formTitle"  name="editableText1" size="30" min="3" max="50" pattern="^[a-zA-Z]{1,3}" hideButtons="true" required="true"></inline-editor>
+                            </div>
+                            <!--<input type="text" class="form-control" [(ngModel)]="formTitle" [ngModelOptions]="{standalone: true}"/>-->
+                        </div>
+                        <!--<div *ngIf="!isEditTitle"><h5 class="card-title" (click)="isEditTitle = true;">{{formTitle}} <i-->
+                            <!--class="fa fa-pencil" (click)="isEditTitle = true;"></i></h5>-->
+                        <!--</div>-->
+                        <!--<div *ngIf="isEditTitle">-->
+                            <!--<div>-->
+                                <!--<form class="form-inline" id="frmFormName">-->
+                                    <!--<label class="mr-sm-2">Form Name(Unique)</label>-->
+                                    <!--<input (change)="updateFormTitle()" type="text"-->
+                                           <!--class="form-title custom-control-input" (blur)="isEditTitle = false;" focus/>-->
+                                    <!--<button class="btn btn-sm"><i class="fa fa-check fa-lg"></i></button>-->
+                                    <!--<button class="btn btn-sm"><i class="fa fa-close fa-lg"></i></button>-->
+
+                                <!--</form>-->
+                            <!--</div>-->
+
+
+                        <!--</div>-->
+                    </div>
+                    <div class="pull-right mt-2 mr-4">
+                        <button class="btn" (click)="saveTileForm()"><i class="fa fa-save fa-lg"></i></button>
+                    </div>
+
+                </div>
+
+                <div class="card-block">
+
+                    <div dnd-droppable class="panel panel-info" (onDropSuccess)="transferDataSuccess($event)">
+                        <!--<div class="panel-heading">Place to drop</div>-->
+                        <div class="panel-body" style="height: 500px;">
+                            <!--<div [hidden]="!receivedData.length > 0" *ngFor="let data of receivedData">{{data | json}}</div>-->
+
+                            <gridster [options]="options">
+                                <gridster-item [item]="item" *ngFor="let i=index;let item of dashboard"
+                                               (dblclick)="showControlProperties(content, item,i)">
+
+                                    <div *ngIf="item.type == 'text_input'">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label">{{item.label}}</label>
+                                            <div class="col-sm-12">
+
+                                                <input type="text" [id]="item.ctl_id" [(ngModel)]="item.value" required="{{item.required}}"
+                                                       class="form-control" placeholder="{{item.placeholder}}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="item.type == 'text_area'">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label">{{item.label}}</label>
+                                            <div class="col-sm-12">
+                                               <textarea [(ngModel)]="item.value" rows="1" cols="20"
+                                                         required="{{item.required}}" class="form-control"
+                                                         placeholder="{{item.placeholder}}">
+                                                    {{item.value}}
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="item.type == 'checkbox'">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label">{{item.label}}</label>
+                                            <div class="col-sm-12" *ngFor="let option of item.options">
+                                                <!--<label class="ng-binding">-->
+                                                    <!--<input type="hidden" [(ngModel)]="item.value" class="checkbox">-->
+                                                <!--</label>-->
+                                                <input type="checkbox" name="{{item.ctl_id}}" [(ngModel)]="item.value">{{option}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="item.type == 'radio'">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label">{{item.label}}</label>
+                                            <div class="col-sm-12" *ngFor="let option of item.options" class="radio">
+                                                <input type="radio" [(ngModel)]="item.value" name="{{item.ctl_id}}">{{option}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="item.type == 'select'">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label">{{item.label}}</label>
+                                            <div class="col-sm-12">
+                                                <select class="form-control" required="{{item.required}}"
+                                                        [(ngModel)]="item.value">
+                                                    <option *ngFor="let option of item.options"
+                                                            value="{{option}}">{{option}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="item.type == 'date'">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label">{{item.label}}</label>
+                                            <div class="col-sm-12">
+                                                <input type="date" [(ngModel)]="item.value" required="{{item.required}}"
+                                                       class="form-control" placeholder="{{item.placeholder}}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="item.type == 'slider'">
+                                        <div class="form-group">
+                                            <label class="col-sm-12 control-label">{{item.label}}</label>
+                                            <div class="col-sm-12">
+                                                <!--<input type="range" min="1" max="100" value="50" class="slider" id="myRange">-->
+                                                <input type="range" [name]="item.ctl_id" [(ngModel)]="item.value" required="{{item.required}}"
+                                                       class="form-control" placeholder="{{item.placeholder}}" min="1" max="100"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </gridster-item>
+                            </gridster>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col col-xl-3 col-lg-3 col-md-3">
+            <accordion>
+                <accordion-group #group [isOpen]="status.isOpen">
+                    <div accordion-heading>
+                        Basic
+                        <i class="pull-right float-xs-right fa"
+                           [ngClass]="{'fa-caret-square-o-up': group?.isOpen, 'fa-caret-square-o-right': !group?.isOpen}"></i>
+                    </div>
+
+                    <div *ngFor="let drop of droplists.basic">
+                        <p dnd-draggable [dragEnabled]="true" [dragData]="drop">
+                            <span *ngIf="drop == 'text_input'" class="fa fa-text-height"></span>
+                            <span *ngIf="drop == 'text_area'" class="glyphicon glyphicon-check"></span>
+                            <span *ngIf="drop == 'checkbox'" class="glyphicon glyphicon-stop"></span>
+                            <span *ngIf="drop == 'radio'" class="glyphicon glyphicon-record"></span>
+                            <span *ngIf="drop == 'select'" class="glyphicon glyphicon-collapse-down"></span>
+                            <span *ngIf="drop == 'date'" class="glyphicon glyphicon-calendar"></span>
+                            <span *ngIf="drop == 'slider'" class="glyphicon glyphicon-tasks"></span>
+                            <span *ngIf="drop == 'switch'" class="glyphicon-resize-horizontal"></span>
+                            <span *ngIf="drop == 'tags'" class="glyphicon glyphicon-tags"></span>
+                            <span *ngIf="drop == 'sheet'" class="glyphicon glyphicon-th"></span>
+                            <span *ngIf="drop == 'linked_record'" class="glyphicon glyphicon-indent-left"></span>
+                            {{drop}}
+                        </p>
+                    </div>
+                </accordion-group>
+
+                <accordion-group #group [isOpen]="status.isOpen">
+                    <div accordion-heading>
+                        Workflow
+                        <i class="pull-right float-xs-right fa"
+                           [ngClass]="{'fa-caret-square-o-up': group?.isOpen, 'fa-caret-square-o-right': !group?.isOpen}"></i>
+                    </div>
+
+                    <div *ngFor="let drop of droplists.workflow">
+                        <p dnd-draggable [dragEnabled]="true" [dragData]="drop">
+                            <span *ngIf="drop == 'Text Input'" class="fa fa-text-height"></span>
+                            <span *ngIf="drop == 'Text Area'" class="glyphicon glyphicon-check"></span>
+                            <span *ngIf="drop == 'Checkbox'" class="glyphicon glyphicon-stop"></span>
+                            <span *ngIf="drop == 'Radio'" class="glyphicon glyphicon-record"></span>
+                            <span *ngIf="drop == 'Select'" class="glyphicon glyphicon-collapse-down"></span>
+                            <span *ngIf="drop == 'Date'" class="glyphicon glyphicon-calendar"></span>
+                            <span *ngIf="drop == 'Slider'" class="glyphicon glyphicon-tasks"></span>
+                            <span *ngIf="drop == 'Switch'" class="glyphicon-resize-horizontal"></span>
+                            <span *ngIf="drop == 'Tags'" class="glyphicon glyphicon-tags"></span>
+                            <span *ngIf="drop == 'Sheet'" class="glyphicon glyphicon-th"></span>
+                            <span *ngIf="drop == 'Linked Record'" class="glyphicon glyphicon-indent-left"></span>
+                            {{drop}}
+                        </p>
+
+
+                    </div>
+                </accordion-group>
+
+                <accordion-group #group [isOpen]="status.isOpen">
+                    <div accordion-heading>
+                        Data
+                        <i class="pull-right float-xs-right fa"
+                           [ngClass]="{'fa-caret-square-o-up': group?.isOpen, 'fa-caret-square-o-right': !group?.isOpen}"></i>
+                    </div>
+
+                    <div *ngFor="let drop of droplists.data">
+                        <p dnd-draggable [dragEnabled]="true" [dragData]="drop">
+                            <span *ngIf="drop == 'Text Input'" class="fa fa-text-height"></span>
+                            <span *ngIf="drop == 'Text Area'" class="glyphicon glyphicon-check"></span>
+                            <span *ngIf="drop == 'Checkbox'" class="glyphicon glyphicon-stop"></span>
+                            <span *ngIf="drop == 'Radio'" class="glyphicon glyphicon-record"></span>
+                            <span *ngIf="drop == 'Select'" class="glyphicon glyphicon-collapse-down"></span>
+                            <span *ngIf="drop == 'Date'" class="glyphicon glyphicon-calendar"></span>
+                            <span *ngIf="drop == 'Slider'" class="glyphicon glyphicon-tasks"></span>
+                            <span *ngIf="drop == 'Switch'" class="glyphicon-resize-horizontal"></span>
+                            <span *ngIf="drop == 'Tags'" class="glyphicon glyphicon-tags"></span>
+                            <span *ngIf="drop == 'Sheet'" class="glyphicon glyphicon-th"></span>
+                            <span *ngIf="drop == 'Linked Record'" class="glyphicon glyphicon-indent-left"></span>
+                            {{drop}}
+                        </p>
+
+
+                    </div>
+                </accordion-group>
+
+                <accordion-group #group [isOpen]="status.isOpen">
+                    <div accordion-heading>
+                        Social
+                        <i class="pull-right float-xs-right fa"
+                           [ngClass]="{'fa-caret-square-o-up': group?.isOpen, 'fa-caret-square-o-right': !group?.isOpen}"></i>
+                    </div>
+
+                    <div *ngFor="let drop of droplists.social">
+                        <p dnd-draggable [dragEnabled]="true" [dragData]="drop">
+                            <span *ngIf="drop == 'Text Input'" class="fa fa-text-height"></span>
+                            <span *ngIf="drop == 'Text Area'" class="glyphicon glyphicon-check"></span>
+                            <span *ngIf="drop == 'Checkbox'" class="glyphicon glyphicon-stop"></span>
+                            <span *ngIf="drop == 'Radio'" class="glyphicon glyphicon-record"></span>
+                            <span *ngIf="drop == 'Select'" class="glyphicon glyphicon-collapse-down"></span>
+                            <span *ngIf="drop == 'Date'" class="glyphicon glyphicon-calendar"></span>
+                            <span *ngIf="drop == 'Slider'" class="glyphicon glyphicon-tasks"></span>
+                            <span *ngIf="drop == 'Switch'" class="glyphicon-resize-horizontal"></span>
+                            <span *ngIf="drop == 'Tags'" class="glyphicon glyphicon-tags"></span>
+                            <span *ngIf="drop == 'Sheet'" class="glyphicon glyphicon-th"></span>
+                            <span *ngIf="drop == 'Linked Record'" class="glyphicon glyphicon-indent-left"></span>
+                            {{drop}}
+                        </p>
+
+
+                    </div>
+                </accordion-group>
+
+                <accordion-group #group [isOpen]="status.isOpen">
+                    <div accordion-heading>
+                        Rules
+                        <i class="pull-right float-xs-right fa"
+                           [ngClass]="{'fa-caret-square-o-up': group?.isOpen, 'fa-caret-square-o-right': !group?.isOpen}"></i>
+                    </div>
+
+                    <div *ngFor="let drop of droplists.rules">
+                        <p dnd-draggable [dragEnabled]="true" [dragData]="drop">
+                            <span *ngIf="drop == 'Text Input'" class="fa fa-text-height"></span>
+                            <span *ngIf="drop == 'Text Area'" class="glyphicon glyphicon-check"></span>
+                            <span *ngIf="drop == 'Checkbox'" class="glyphicon glyphicon-stop"></span>
+                            <span *ngIf="drop == 'Radio'" class="glyphicon glyphicon-record"></span>
+                            <span *ngIf="drop == 'Select'" class="glyphicon glyphicon-collapse-down"></span>
+                            <span *ngIf="drop == 'Date'" class="glyphicon glyphicon-calendar"></span>
+                            <span *ngIf="drop == 'Slider'" class="glyphicon glyphicon-tasks"></span>
+                            <span *ngIf="drop == 'Switch'" class="glyphicon-resize-horizontal"></span>
+                            <span *ngIf="drop == 'Tags'" class="glyphicon glyphicon-tags"></span>
+                            <span *ngIf="drop == 'Sheet'" class="glyphicon glyphicon-th"></span>
+                            <span *ngIf="drop == 'Linked Record'" class="glyphicon glyphicon-indent-left"></span>
+                            {{drop}}
+                        </p>
+
+
+                    </div>
+                </accordion-group>
+
+                <accordion-group #group [isOpen]="status.isOpen">
+                    <div accordion-heading>
+                        Others
+                        <i class="pull-right float-xs-right fa"
+                           [ngClass]="{'fa-caret-square-o-up': group?.isOpen, 'fa-caret-square-o-right': !group?.isOpen}"></i>
+                    </div>
+
+                    <div *ngFor="let drop of droplists.others">
+                        <p dnd-draggable [dragEnabled]="true" [dragData]="drop">
+                            <span *ngIf="drop == 'Text Input'" class="fa fa-text-height"></span>
+                            <span *ngIf="drop == 'Text Area'" class="glyphicon glyphicon-check"></span>
+                            <span *ngIf="drop == 'Checkbox'" class="glyphicon glyphicon-stop"></span>
+                            <span *ngIf="drop == 'Radio'" class="glyphicon glyphicon-record"></span>
+                            <span *ngIf="drop == 'Select'" class="glyphicon glyphicon-collapse-down"></span>
+                            <span *ngIf="drop == 'Date'" class="glyphicon glyphicon-calendar"></span>
+                            <span *ngIf="drop == 'Slider'" class="glyphicon glyphicon-tasks"></span>
+                            <span *ngIf="drop == 'Switch'" class="glyphicon-resize-horizontal"></span>
+                            <span *ngIf="drop == 'Tags'" class="glyphicon glyphicon-tags"></span>
+                            <span *ngIf="drop == 'Sheet'" class="glyphicon glyphicon-th"></span>
+                            <span *ngIf="drop == 'Linked Record'" class="glyphicon glyphicon-indent-left"></span>
+                            {{drop}}
+                        </p>
+                    </div>
+                </accordion-group>
+            </accordion>
+
+
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <!--<div class="card-header">Modal</div>-->
+                <!-- Large modal -->
+                <div class="card-block">
+                    <!--<button class="btn btn-primary" (click)="open(content)">Large modal</button>-->
+                    <ng-template #content let-c="close" let-d="dismiss">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Properties</h4>
+                            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+
+                            <div>
+                                <form autocomplete="off">
+                                    <div class="form-group">
+                                        <label class='control-label'> Label</label>
+                                        <input type='text' class='form-control' [(ngModel)]="itemProperties[properties_index].label" [ngModelOptions]="{standalone: true}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class='control-label'> Placeholder</label>
+                                        <input type='text' class='form-control' [(ngModel)]="itemProperties[properties_index].placeholder" [ngModelOptions]="{standalone: true}"/>
+                                    </div>
+                                    <div class="form-group" *ngIf="itemProperties[properties_index].options.length > 0">
+                                        <label class="control-label"> Options</label>
+                                        <textarea [(ngModel)]="itemProperties[properties_index].optionsString" rows="3" class="form-control"
+                                                  [ngModelOptions]="{standalone: true}" required></textarea>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type='checkbox' [(ngModel)]="itemProperties[properties_index].minimise"
+                                                   [ngModelOptions]="{standalone: true}"/> Show in minimized view
+                                        </label>
+                                    </div>
+                                    <div class="checkbox" *ngIf="itemProperties[properties_index].minimise">
+                                        <label>
+                                            <input type='checkbox' [(ngModel)]="itemProperties[properties_index].backview"
+                                                   [ngModelOptions]="{standalone: true}"/> Is back view </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type='checkbox' [(ngModel)]="itemProperties[properties_index].required"
+                                                   [ngModelOptions]="{standalone: true}"/> Required</label>
+                                    </div>
+
+
+                                    <div class="form-group" *ngIf="isMappedTile">
+                                        <label class='control-label'> Map Field</label>
+
+                                        <select class="form-control" [(ngModel)]="itemProperties[properties_index].map_field" [ngModelOptions]="{standalone: true}">
+                                            <option value="0">--Choose--</option>
+                                            <option *ngFor="let field of tableFields" [value]="field">
+                                                {{field}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group" *ngIf="isMappedTile">
+                                        <label class='control-label'> Foreign Table</label>
+                                        <select>
+                                            <option>NA</option>
+                                        </select>
+                                        <!--<select class="form-control" ngModel="itemProperties.table_mapping.field_name" ng-options="option.field_name for option in itemProperties.table_mapping.options track by option.field_name"></select>-->
+                                    </div>
+
+                                    <div class="form-group" *ngIf="isMappedTile">
+                                        <label class='control-label'> Foreign Field</label>
+                                        <select>
+                                            <option>NA</option>
+                                        </select>
+                                        <!--<select class="form-control" ngModel="itemProperties.table_mapping.field_name" ng-options="option.field_name for option in itemProperties.table_mapping.options track by option.field_name"></select>-->
+                                    </div>
+
+
+                                </form>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <!--<button type="button" class="btn btn-secondary" (click)="SavePropertyModal(itemProperties)">-->
+                                <!--Save-->
+                            <!--</button>-->
+                            <button type="button" class="btn btn-secondary" (click)="savePropertyModal(itemProperties[properties_index])">
+                                Save
+                            </button>
+                            <button type="button" class="btn btn-secondary"
+                                    (click)="deletePropertyModal(itemProperties[properties_index])">Delete
+                            </button>
+                            <!--<button type="button" class="btn btn-secondary"-->
+                                    <!--(click)="deletePropertyModal(itemProperties)">Delete-->
+                            <!--</button>-->
+                            <button type="button" class="btn btn-secondary"
+                                    (click)="c('Close click')">Close
+                            </button>
+
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

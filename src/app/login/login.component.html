@@ -1,0 +1,30 @@
+<div class="login-page" [@routerTransition]>
+    <div class="row">
+        <div class="col-md-4 push-md-4">
+            <img src="assets/images/logo.png" width="150px" class="user-avatar" />
+            <h1>PA Science</h1>
+            <form [formGroup]="form" class="form-horizontal">
+                <div *ngIf="alertMessage">
+                    <p class="text text-info">{{ alertMessage }}</p>
+                </div>
+                <div class="form-content">
+                    <div class="form-group">
+                        <!--<input type="text" class="form-control input-underline input-lg" placeholder="Email" ngModel="user.username" ngModelOptions="{standalone: true}" >-->
+                        <input formControlName="username" type="email" class="form-control input-underline input-lg" placeholder="Username" autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <!--<input type="password" class="form-control input-underline input-lg"  placeholder="Password" ng-model="user.password">-->
+                        <input formControlName="password" type="password" class="form-control input-underline input-lg" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <p class="text pull-right"><a class="btn" style="color:white;" (click)="reset_password()"> Forgot Password!</a></p>
+                    </div>
+                </div>
+                <button [disabled]="!form.valid" type="submit" class="btn rounded-btn" (click)="login(form)">Sign in</button>
+                <!--<a class="btn rounded-btn" (click)="login()"> Log in</a> &nbsp;-->
+                <a type="submit" class="btn rounded-btn" routerLink="/signup">Register</a>
+            </form>
+        </div>
+    </div>
+</div>

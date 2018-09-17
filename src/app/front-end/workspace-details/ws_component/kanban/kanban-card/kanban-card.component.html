@@ -1,0 +1,321 @@
+<div class="kanban-centered">
+    <div>
+        <section  class="kanban-entry grab flip-container" id="item{{i}}"
+             *ngFor="let i=index;let card of cards"
+             (dblclick)="showControlProperties(content, card)"
+             [attr.card-column]="column_name" [sortablejs]="cards" [sortablejsOptions]="options" >
+            <!--<pre>{{card | json}}</pre>-->
+
+            <div class="flipper">
+                <div class="kanban-entry-inner front"  [ngStyle]="{'background-color': card.highlight_color}">
+                    <div *ngFor="let form of form_data">
+
+                        <div class="info-card">
+                            <div *ngIf="form.minimise && !form.backview" class="">
+                                <span class="kanban-label text-muted">{{form.label}}</span>
+                                <span class="kanban-label">{{card[form.map_field]}}</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            <!-- back view-->
+                <div class="kanban-entry-inner back"  [ngStyle]="{'background-color': card.highlight_color}">
+                    <div *ngFor="let form of form_data">
+                        <div class="info-card">
+                            <div *ngIf="form.minimise && form.backview" class="">
+                                <span class="kanban-label text-muted">{{form.label}}</span>
+                                <span class="kanban-label">{{card[form.map_field]}}</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="card-footer">
+        <div class="addFormLink">
+            <!--<a href="javascript:void(0);" (click)="toggleAddCard(col_number +'_' + component_details.component_id)">add new card</a>-->
+            <a href="javascript:void(0);" style="display: block;">Add new card</a>
+        </div>
+        <div id="addFrom{{component_details.component_id}}" class="showAddForm" style="display: none;">
+            <div>
+                <form>
+
+                    <div id="Prev" class="formPrev" *ngFor="let i=index;let formT of form_data">
+                        <div *ngIf="formT.type=='text_input'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                <div class="col-sm-12">
+                                    <input type="text" [(ngModel)]="formT.value" [ngModelOptions]="{standalone: true}" name="{{formT.label+i}}" class="form-control"
+                                           placeholder="{{formT.placeholder}}"/>
+                                    <p *ngIf="formT.help_text" class='help-block'>{{formT.help_text}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='text_area'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                <div class="col-sm-12">
+                        <textarea [(ngModel)]="formT.value" [ngModelOptions]="{standalone: true}" name="{{formT.label+i}}"
+                                  class="form-control" placeholder="{{formT.placeholder}}"></textarea>
+                                    <p *ngIf="formT.help_text" class='help-block'>{{formT.help_text}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='datepickerInput'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{form.label}}</label>
+                                <div class="col-sm-12">
+                                    <input type="date" [(ngModel)]="formT.value" [ngModelOptions]="{standalone: true}" name="{{formT.label+index}}"
+                                           class="form-control"/>
+                                    <p class='help-block'>{{formT.help_text}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='sliderInput'">
+                            <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                            <div class="col-md-8">
+                                <!--<div data-range-slider data-floor="{{formT.floor}}" data-ceiling="{{formT.ceiling}}"-->
+                                <!--data-step="{{formT.step}}" data-precision="2"-->
+                                <!--data-highlight="left" [ngModel]="formT.value" name="{{formT.label+index}}"></div>-->
+                                <p class='help-block'>{{formT.help_text}}</p>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='switchInput'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                <div class="col-sm-12">
+                                    <!--<switch name="yesNo" [ngModel]="formT.value" name="{{formT.label+index}}"-->
+                                    <!--on="{{formT.switch_value_one}}" off="{{formT.switch_value_two}}" class="wide"></switch>-->
+                                    <p class='help-block'>{{formT.help_text}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='tagsInput'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                <div class="col-sm-12">
+                                    <!--<tags-input [ngModel]="formT.value" name="{{formT.label+index}}"></tags-input>-->
+                                    <p class='help-block'>{{formT.help_text}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='iconsInput'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                <div class="col-sm-12">
+                                    <!--<ui-iconpicker [ngModel]="formT.value" name="{{formT.label+index}}"/>-->
+                                    <p class='help-block'>{{formT.help_text}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='select'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                <div class="col-sm-12">
+                                    <!--<select class="form-control" required="{{formT.required}}" [ngModel]="formT.value"-->
+                                    <!--name="{{formT.label+index}}">-->
+                                    <!--<option ng-repeat="options in formT.options" value="{{options}}" name="{{options}}">-->
+                                    <!--{{options}}-->
+                                    <!--</option>-->
+                                    <!--</select>-->
+                                    <p class='help-block'>{{formT.help_text}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='checkbox'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                <div class="col-sm-12" ng-repeat="options in formT.options">
+                                    <label class="ng-binding">
+                                        <input type="hidden" [(ngModel)]="formT.value" [ngModelOptions]="{standalone: true}" name="{{formT.label+i}}" required="false"
+                                               class="checkbox">
+                                    </label>
+                                    <input type="checkbox" name="{{formT.label+i}}" required="{{formT.required}}"
+                                           checked="{{formT.value}}">{{options}}
+                                </div>
+                                <p class="help-block" style="margin-left:420px;">{{formT.help_text}}</p>
+                            </div>
+                        </div>
+                        <div *ngIf="formT.type=='radio'">
+                            <div class="form-group">
+                                <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                <div class="col-sm-12" *ngFor="let options of formT.options" class="radio">
+                                    <input type="radio" name="{{options}}" required="{{formT.required}}" checked="{{formT.value}}">{{options}}
+                                </div>
+                                <p class="help-block" style="margin-left:420px;">{{formT.help_text}}</p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row btn-row">
+                        <div class="col-xs-12 btn-col">
+                            <!--<a href="javascript:void(0);" class="btn btn-sm" (click)="addNewCard()">Save Card</a>-->
+                            <button class="btn btn btn-secondary" (click)="addNewCard(form_data)">Submit</button>
+                            <button class="form-cancel-btn btn btn-secondary">Cancel</button>
+                            <!--<input type="button" name="submit" value="Submit" class="btn btn-xs btn-success" />-->
+                            <!--<input type="button" name="Cancel" value="Cancel" class="btn btn-xs"/>-->
+                        </div>
+                    </div>
+
+
+                    <!--<div class="btn-block">-->
+                    <!--<a href="javascript:void(0);" class="btn btn-sm btn-primary" (click)="addNewCard()">Save Card</a>-->
+                    <!--</div>-->
+                </form>
+            </div>
+
+        </div>
+
+        </div>
+</div>
+
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h4 class="modal-title">Edit Details</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Large modal -->
+                <div class="card-block">
+                    <!--dsadasdasdasdasdasdasdas-->
+
+                    <!--<pre>{{item|json}}</pre>-->
+                    <div>
+                        <form>
+
+                            <div id="Prev" class="formPrev" *ngFor="let i=index;let formT of form_data">
+
+                                <div *ngIf="formT.type=='text_input'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" [(ngModel)]="formT.value" [ngModelOptions]="{standalone: true}" name="{{formT.label+i}}" class="form-control"
+                                                   placeholder="{{formT.placeholder}}" />
+                                            <p *ngIf="formT.help_text" class='help-block'>{{formT.help_text}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='text_area'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12">
+                                            <textarea [(ngModel)]="formT.value" [ngModelOptions]="{standalone: true}" name="{{formT.label+i}}"
+                                                class="form-control" placeholder="{{formT.placeholder}}" >
+                                            </textarea>
+                                            <p *ngIf="formT.help_text" class='help-block'>{{formT.help_text}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='date'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12">
+                                            <input type="date" [(ngModel)]="formT.value" [ngModelOptions]="{standalone: true}" name="{{formT.label+i}}"
+                                                   class="form-control"/>
+                                            <p class='help-block'>{{formT.help_text}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='sliderInput'">
+                                    <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                    <div class="col-md-8">
+                                        <!--<div data-range-slider data-floor="{{formT.floor}}" data-ceiling="{{formT.ceiling}}"-->
+                                        <!--data-step="{{formT.step}}" data-precision="2"-->
+                                        <!--data-highlight="left" [(ngModel)]="formT.value" name="{{formT.label+index}}"></div>-->
+                                        <p class='help-block'>{{formT.help_text}}</p>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='switchInput'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12">
+                                            <!--<switch name="yesNo" [(ngModel)]="formT.value" name="{{formT.label+index}}"-->
+                                            <!--on="{{formT.switch_value_one}}" off="{{formT.switch_value_two}}" class="wide"></switch>-->
+                                            <p class='help-block'>{{formT.help_text}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='tagsInput'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12">
+                                            <!--<tags-input [(ngModel)]="formT.value" name="{{formT.label+index}}"></tags-input>-->
+                                            <p class='help-block'>{{formT.help_text}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='iconsInput'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12">
+                                            <!--<ui-iconpicker [(ngModel)]="formT.value" name="{{formT.label+index}}"/>-->
+                                            <p class='help-block'>{{formT.help_text}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='select'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12">
+
+                                            <select class="form-control" required="{{formT.required}}" [(ngModel)]="formT.value"
+                                            name="{{formT.label+index}}">
+                                                <option [ngValue]="undefined" selected >Please Select</option>
+                                                <option *ngFor="let option of formT.options" [ngValue]="option">{{option}}</option>
+
+                                            </select>
+                                            <p class='help-block'>{{formT.help_text}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='checkbox'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12" ng-repeat="let options of formT.options">
+                                            <label class="ng-binding">
+                                                <input type="hidden" [(ngModel)]="formT.value" [ngModelOptions]="{standalone: true}" name="{{formT.label+i}}" required="false"
+                                                       class="checkbox">
+                                            </label>
+                                            <input type="checkbox" name="{{formT.label+i}}" required="{{formT.required}}"
+                                                   checked="{{formT.value}}">{{options}}
+                                        </div>
+                                        <p class="help-block" style="margin-left:420px;">{{formT.help_text}}</p>
+                                    </div>
+                                </div>
+                                <div *ngIf="formT.type=='radio'">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 control-label" [className]="{'fb-required':required}">{{formT.label}}</label>
+                                        <div class="col-sm-12" *ngFor="let options of formT.options" class="radio">
+                                            <input type="radio" name="{{options}}" required="{{formT.required}}" checked="{{formT.value}}">{{options}}
+                                        </div>
+                                        <p class="help-block" style="margin-left:420px;">{{formT.help_text}}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row btn-row">
+                                <div class="col-xs-12 btn-col">
+                                    <button class="btn btn btn-secondary" (click)="updateCard(form_data,item)">Submit</button>
+                                    <button class="form-cacel-btn btn btn-secondary" (click)="c('Close click')" >Cancel</button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

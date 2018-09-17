@@ -1,0 +1,15 @@
+{
+    "compileOnSave": true,
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "module": "es2017",
+        "baseUrl": "",
+        "types": [],
+        "removeComments": true
+    },
+    "exclude": [
+        "test.ts",
+        "**/*.spec.ts"
+    ]
+}

@@ -1,0 +1,53 @@
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
+
+    <!--<pre>{{userInfo.role_id | json}}</pre>-->
+    <ul class="list-group">
+
+        <a *ngIf="userInfo && userInfo.role_id==1" [routerLink]="['/admin/dashboard']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Dashbaord">
+            <i class="fa fa-fw fa-lg fa-dashboard"></i>
+        </a>
+        <a [routerLink]="['/admin/company']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Company/Groups">
+        <i class="fa fa-fw fa-lg fa-users"></i>
+        </a>
+        <a [routerLink]="['/admin/workspaces']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Workspaces">
+            <i class="fa fa-fw fa-lg fa-desktop"></i>
+        </a>
+        <a [routerLink]="['/admin/acls']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Acls">
+            <i class="fa fa-fw fa-lg fa-eye"></i>
+        </a>
+
+        <!--<div class="dropdown-divider"></div>-->
+
+        <a [routerLink]="['/admin/data-management']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Data Management">
+            <i class="fa fa-fw fa-lg fa-database"></i>
+        </a>
+
+        <a [routerLink]="['/admin/tile-builder']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Tile Builder">
+            <i class="fa fa-fw fa-lg fa-th"></i>
+        </a>
+
+        <a [routerLink]="['/admin/data-filters']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Table Filters">
+            <i class="fa fa-fw fa-lg fa-filter"></i>
+        </a>
+
+        <a [routerLink]="['/admin/kanban']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Kanban Component">
+            <i class="fa fa-fw fa-lg fa-columns"></i>
+        </a>
+        <a [routerLink]="['/admin/sheets']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Sheets">
+            <i class="fa fa-fw fa-lg fa-table"></i>
+        </a>
+        <a [routerLink]="['/admin/charts']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Charts">
+            <i class="fa fa-fw fa-lg fa-bar-chart-o"></i>
+        </a>
+        <a [routerLink]="['/admin/analysis']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Analysis">
+            <i class="fa fa-fw fa-lg fa-tripadvisor"></i>
+        </a>
+
+        <a [routerLink]="['/admin/buckets']" [routerLinkActive]="['router-link-active']" class="list-group-item" title="Buckets">
+            <i class="fa fa-fw fa-lg fa-bitbucket"></i>
+        </a>
+
+    </ul>
+
+
+</nav>

@@ -1,0 +1,126 @@
+<div [@routerTransition]>
+    <div class="row">
+        <div class="col col-xl-11 col-lg-11 col-md-11 pull-left">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="btn-group btngroupboards" style="margin-left: 2px;" *ngFor="let i=index;let board of all_boards" [id]="board.ROWID">
+
+                        <span class="btn btnboardname" style="background-color: buttonface;" (click)="loadComponents(board.ROWID)" *ngIf="!showBoardEdit">{{board.name}}</span>
+                        <!--<button type="button" class="btn btnboardname" (click)="loadComponents(board.ROWID)" *ngIf="!showBoardEdit">-->
+                            <!--{{board.name}}-->
+                        <!--</button>-->
+                        <div class="inputeditboardname" style="display: none;">
+                            <input type="text" class="form-control inputEditBoard" [value]="board.name" minlength="3" maxlength="50" pattern="^[a-zA-Z]{1,3}" required />
+                            <!--<inline-editor type="text" [(ngModel)]="board.name" (onSave)="saveEditable($event,board)" name="editableText1" size="10" min="3" max="50" pattern="^[a-zA-Z]{1,3}"></inline-editor>-->
+                        </div>
+                        <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+                            <button class="btn btn dropdown-toggle-split" ngbDropdownToggle></button>
+                            <div class="dropdown-menu" ngbDropdownMenu>
+                                <button class="dropdown-item dropdown-item-rename">Rename</button>
+                                <button class="dropdown-item" (click)="deleteBoard(board.ROWID)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn mt-1 ml-1 mb-1"  (click)="addBoard(i)"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="col col-xl-1 col-lg-1 col-md-1 pull-right">
+            <div class="card">
+                <div class="card-body">
+                    <button class="mt-1 ml-1 mb-1" title="add new component(s) to board" placement="left"
+                            [ngbPopover]="popoverAddNewComponent" popoverTitle="" container="body"><i
+                        class="fa fa-plus-square-o"></i></button>
+                    <button class="mt-1 ml-1 mb-1" title="invite user(s)" title="Invite user" placement="left"
+                            [ngbPopover]="popoverAddNewInvite" popover-trigger="'outsideClick'" popoverTitle="" container="body"><i class="fa fa-share-square-o"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <!--<pre>{{dashboard|json}}</pre>-->
+            <gridster [options]="options" [hidden]="!dashboard.length > 0">
+                <gridster-item [item]="item" *ngFor="let item of dashboard" [id]="item.data.component_id">
+                    <app-component-kanban *ngIf="item['data']['component_type']=='kanban'" [data]="item" [board]="active_board"></app-component-kanban>
+                    <app-component-chart *ngIf="item['data']['component_type']=='charts'" [component_data]="item['data']" [random_unique_number]="" [board]="active_board"></app-component-chart>
+                    <app-component-sheet *ngIf="item['data']['component_type']=='sheets'" [component_data]="item['data']" [board]="active_board"></app-component-sheet>
+
+                </gridster-item>
+            </gridster>
+            <p *ngIf="dashboard.length == 0" class="text text-muted">No component added yet.</p>
+
+            <!--<div class="card">-->
+
+            <!--<div class="card-body" style="min-height: 500px!important;">-->
+            <!--hello i am card body-->
+            <!---->
+
+            <!--</div>-->
+
+            <!--<div class="card-body" *ngIf="dashboard.length == 0">-->
+            <!--<p class="alert alert-light"><i class="fa fa-info-circle"></i> Add a component to start</p>-->
+
+            <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+
+</div>
+
+
+<ng-template #popoverAddNewComponent>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <!--<pre>{{all_component_lists|json}}</pre>-->
+                    <div ngbDropdown class="d-inline-block">
+                        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select Component
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button class="dropdown-item" *ngFor="let component of all_component_lists"
+                                    (click)="addComponent2Board(component)">{{component.name}}
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</ng-template>
+
+<ng-template #popoverAddNewInvite>
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12 col-md-12">
+            <div class="card">
+                <form #inviteUsers>
+                    <div class="card-body">
+                       <div class="form-group">
+                            <label class="col-sm-12 control-label">User Email</label>
+                            <div class="col-sm-12">
+                                <input type="email" [pattern]="emailPattern" email="true" required [(ngModel)]="inviteEmail" name="inviteEmail" [ngModelOptions]="{standalone: true}" class="form-control"
+                                       placeholder="Enter email"/>
+                            </div>
+                           <p class="text text-danger text-center" [hidden]="!invalidemail">Invalid email</p>
+
+                        </div>
+
+
+                    </div>
+                    <div class="card-footer" *ngIf="inviteEmail">
+                        <div class="text-center">
+                            <div class="col-xs-12">
+                                <button class="btn btn-secondary" (click)="inviteUser(inviteEmail)">Invite</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</ng-template>
